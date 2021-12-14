@@ -14,7 +14,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = FULL_URL_DB
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["JWT_SECRET_KEY"] = "super-secret"
 app.config['CELERY_BROKER_URL'] = os.environ.get('REDISGREEN_URL', 'redis://localhost:6379/0')
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 
 jwt = JWTManager(app)
 db.init_app(app)

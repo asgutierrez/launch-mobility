@@ -26,7 +26,7 @@ def get_city_state_and_county_by_zip_code_from_file(zip_code):
 
 def get_city_state_and_county_by_zip_code(zip_code):
     try:
-        response = requests.get(url=f"https://www.zipcodeapi.com/rest/DemoOnly000rEHtaqLsbe1YgtXEDp9eTTizuRd2XohTa0uOmTJOZO2KJvrsXy0ZO/info.json/{zip_code}/degrees")
+        response = requests.get(url=f"https://www.zipcodeapi.com/rest/F2HSlKO6rhHOb1frFuUG1WwGSCWyVQOdqILmVmxYCWTSO9L2L6aQ2SkI1KnfWNM8/info.json/{zip_code}/degrees")
         data = response.json()
         return data['city'], data['state'], get_county_by_zip_code(zip_code)
     except Exception as e:

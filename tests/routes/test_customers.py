@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 
 sys.path.append(os.path.abspath(''))
 
-from routes.customers import configure_routes as customers_routes
+from routes.customers import customers as customer_routes
 from database import FULL_URL_DB, db
 
 
@@ -19,8 +19,6 @@ def configure_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = FULL_URL_DB
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config["JWT_SECRET_KEY"] = "super-secret"
-    app.config['CELERY_BROKER_URL'] = os.environ.get('REDISGREEN_URL', 'redis://localhost:6379/0')
-    app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
     jwt = JWTManager(app)
     db.init_app(app)
 
@@ -39,7 +37,7 @@ def get_test_token():
 def test_post_route__success(save_customer_mock, customer_mock):
 
     app = configure_app()
-    customers_routes(app)
+    app.register_blueprint(customer_routes)
     client = app.test_client()
     url = '/api/customers'
     with app.app_context():
@@ -50,14 +48,14 @@ def test_post_route__success(save_customer_mock, customer_mock):
     }
 
     mock_request_data = {
-        "email": "prueba8@",
+        "email": "prueba0@",
         "first_name": "prueba",
         "last_name": "prueba",
         "zip_code": "08989"
     }
 
     mock_response_data = {
-        "email": "prueba8@",
+        "email": "prueba0@",
         "first_name": "prueba",
         "last_name": "prueba",
         "zip_code": "08989",

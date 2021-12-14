@@ -18,15 +18,22 @@ def configure_routes(app):
         except ValidationError as e:
             return Response(str(e), status=400)
 
+        current_user_id = get_jwt_identity()
+
         existing_customer = Customer.query.filter_by(email=customer_data.email).first()
-        if existing_customer:
+        if existing_customer and existing_customer.user_id != current_user_id:
             return Response("Email already exists", status=400)
 
-        current_user_id = get_jwt_identity()
         customer_data.user_id = current_user_id
-        new_customer = Customer(customer_data)
-        
-        save_customer(new_customer)
+
+        existing_customer = Customer.query.filter_by(user_id=current_user_id).first()
+
+        if existing_customer:
+            update_customer(existing_customer, customer_data)
+            new_customer = existing_customer
+        else:
+            new_customer = Customer(customer_data)
+            save_customer(new_customer)
 
         update_customer_location_data(db, new_customer, new_customer.zip_code)
 
@@ -39,6 +46,15 @@ def configure_routes(app):
 
 def save_customer(new_customer):
     db.session.add(new_customer)
+    db.session.commit()
+
+
+def update_customer(customer, customer_data):
+    customer.email = customer_data.email
+    customer.zip_code = customer_data.zip_code
+    customer.first_name = customer_data.first_name
+    customer.middle_name = customer_data.middle_name
+    customer.last_name = customer_data.last_name
     db.session.commit()
 
 

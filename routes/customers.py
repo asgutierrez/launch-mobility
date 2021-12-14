@@ -1,9 +1,8 @@
-from flask import Blueprint, jsonify, request, Response
+from flask import jsonify, request, Response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from pydantic import ValidationError
 from sqlalchemy import inspect
 
-from celery_util import celery
 from models.customer import Customer, CustomerValidator
 from database import db
 from tasks.customer import update_customer_location_data
